@@ -1,10 +1,12 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFMLTest.Entities.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace SFMLTest.Entities
 {
-    class DragableLine : Drawable
+    class DragableLine : Drawable, ICollidable, IDragable
     {
         public Vector2f Start;
         public Vector2f End;
@@ -30,17 +32,6 @@ namespace SFMLTest.Entities
             new Vertex(Start, _color), new Vertex(End, _color)
         };
 
-        private Vertex[] NormalVector()
-        {
-            var vector = End - Start;
-            var startPos = new Vector2f(Start.X + vector.X / 2, Start.Y + vector.Y / 2);
-            vector = new Vector2f(vector.Y * -1, vector.X);
-            return new []
-            {
-                new Vertex(startPos), new Vertex(new Vector2f(startPos.X + vector.X, startPos.Y + vector.Y))
-            };
-        }
-
         public DragableLine(Vector2f start, Vector2f end, Color color)
         {
             Start = start;
@@ -61,28 +52,48 @@ namespace SFMLTest.Entities
         public void Draw(RenderTarget target, RenderStates states)
         {
             target.Draw(Line, PrimitiveType.Lines);
-            target.Draw(NormalVector(), PrimitiveType.Lines);
             target.Draw(_points[0]);
             target.Draw(_points[1]);
         }
 
-        public void CheckDrag(Vector2i mouse)
+        public bool CheckDrag(Vector2i mouse)
         {
             IsDragging = _points[0].CheckDrag(mouse);
             IsDragging = _points[1].CheckDrag(mouse) || IsDragging;
+            return IsDragging;
         }
 
         public void Drag(Vector2i mouse)
         {
-            if (_points[0].IsDragging) _points[0].Drag(mouse);
-            if (_points[1].IsDragging) _points[1].Drag(mouse);
+            if (IsDragging)
+            {
+                if (_points[0].IsDragging) _points[0].Drag(mouse);
+                if (_points[1].IsDragging) _points[1].Drag(mouse);
+            }
         }
 
         public void StopDrag()
         {
-            IsDragging = false;
-            if (_points[0].IsDragging) _points[0].StopDrag();
-            if (_points[1].IsDragging) _points[1].StopDrag();
+            if (IsDragging)
+            {
+                IsDragging = false;
+                if (_points[0].IsDragging) _points[0].StopDrag();
+                if (_points[1].IsDragging) _points[1].StopDrag();
+            }
         }
+
+        public List<Vector2f> GetGlobalPoints() => new List<Vector2f>() { Start, End };
+
+        public Vector2f GetPoint(uint index)
+        {
+            switch (index)
+            {
+                default:
+                case 0: return Start;
+                case 1: return End;
+            }
+        }
+
+        public uint GetPointCount() => 2;
     }
 }

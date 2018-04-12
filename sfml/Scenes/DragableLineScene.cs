@@ -39,7 +39,6 @@ namespace SFMLTest.Scenes
                 foreach (var line in _lines)
                     line.CheckDrag(mousePos);
             }
-
         }
 
         public void MouseButtonReleased(object sender, MouseButtonEventArgs e)

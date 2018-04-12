@@ -1,14 +1,11 @@
 ﻿using SFML.Graphics;
 using SFML.Window;
+using SFMLTest.Entities.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SFMLTest.Entities
 {
-    public class DragableCircle : CircleShape
+    public class DragableCircle : CircleShape, IDragable
     {
         public bool IsDragging;
         public Vector2f DragStartPos;

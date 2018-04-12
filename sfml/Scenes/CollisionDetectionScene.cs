@@ -2,7 +2,7 @@
 using SFML.Graphics;
 using System.Collections.Generic;
 using SFMLTest.Entities;
-using System.Text;
+using SFMLTest.Calculations;
 
 namespace SFMLTest.Scenes
 {
@@ -18,20 +18,17 @@ namespace SFMLTest.Scenes
             Font font = new Font("resources/arcade.ttf");
             var debugtext = new Text("Position: ", font)
             {
-                Position = new Vector2f(550, 0),
+                Position = new Vector2f(440, 0),
                 Scale = new Vector2f(0.7f, 0.7f),
                 Color = Color.Red
             };
 
             _drawables = new List<Drawable>()
             {
-                new Player(new Vector2f(100, 100), new Vector2f(100, 100)),
-                new CircleShape(40) { Origin = new Vector2f(40,40), FillColor = Color.Cyan },
-                new CircleShape(40) { Origin = new Vector2f(40,40), FillColor = Color.Cyan },
-                new CircleShape(40) { Origin = new Vector2f(40,40), FillColor = Color.Cyan },
-                new CircleShape(40) { Origin = new Vector2f(40,40), FillColor = Color.Cyan },
                 debugtext,
-                new CircleShape(10) { Origin = new Vector2f(10,10), FillColor = Color.Red }
+                new Player(new Vector2f(100, 100), new Vector2f(100, 100)),
+                new Player(new Vector2f(200, 200), new Vector2f(100, 100)),
+                new DragableLine(new Vector2f(400, 400), new Vector2f(400, 500), Color.Green)
             };
         }
 
@@ -43,6 +40,19 @@ namespace SFMLTest.Scenes
 
         public void MouseButtonPressed(object sender, MouseButtonEventArgs e)
         {
+            var player1 = (Player)_drawables[1];
+            var line = (DragableLine)_drawables[3];
+            var debugtext = (Text)_drawables[0];
+            if (Collision.CheckCollision(player1, line))
+            {
+                player1.FillColor = Color.Blue;
+                debugtext.DisplayedString += "\nCollision line: True";
+            }
+            else
+            {
+                player1.FillColor = Color.Red;
+                debugtext.DisplayedString += "\nCollision line: False";
+            }
         }
 
         public void MouseButtonReleased(object sender, MouseButtonEventArgs e)
@@ -51,31 +61,26 @@ namespace SFMLTest.Scenes
 
         public void Update()
         {
-            var player = (Player)_drawables[0];
-            player.Rotation = player.Rotation + 1 > 360 ? 0 : player.Rotation + 1;
+            var mousePos = Mouse.GetPosition(_window);
+            var debugtext = (Text)_drawables[0];
+            var player1 = (Player)_drawables[1];
+            var player2 = (Player)_drawables[2];
+            var line = (DragableLine)_drawables[3];
 
-            ((CircleShape)_drawables[6]).Position =
-                new Vector2f(
-                    Mouse.GetPosition(_window).X,
-                    Mouse.GetPosition(_window).Y
-                );
-            player.Position =
-                new Vector2f(
-                    Mouse.GetPosition(_window).X,
-                    Mouse.GetPosition(_window).Y
-                );
+            player1.Position = new Vector2f(mousePos.X, mousePos.Y);
+            player1.Rotation = player1.Rotation + 1 > 360 ? 0 : player1.Rotation + 1;
+            player2.Rotation = player2.Rotation - 1 < 0 ? 360 : player2.Rotation - 1;
 
-            var text = (Text)_drawables[5];
-            var textBuilder = new StringBuilder();
-            textBuilder.Append("Position:\n");
-            foreach (var point in player.GetGlobalPoints())
-                textBuilder.Append($"X: {(int)point.X} Y: {(int)point.Y}\n");
-            text.DisplayedString = textBuilder.ToString();
-
-            ((CircleShape)_drawables[1]).Position = player.GetGlobalPoints()[0];
-            ((CircleShape)_drawables[2]).Position = player.GetGlobalPoints()[1];
-            ((CircleShape)_drawables[3]).Position = player.GetGlobalPoints()[2];
-            ((CircleShape)_drawables[4]).Position = player.GetGlobalPoints()[3];
+            if (Collision.CheckCollision(player1, player2))
+            {
+                player2.FillColor = Color.Blue;
+                debugtext.DisplayedString = "Collision STA: True";
+            }
+            else
+            {
+                player2.FillColor = Color.Red;
+                debugtext.DisplayedString = "Collision STA: False";
+            }
         }
     }
 }

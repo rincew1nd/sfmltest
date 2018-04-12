@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{FC97C392-94A1-4E19-8CED-33A3FE103EAF}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>sfml</RootNamespace>
-    <AssemblyName>sfml</AssemblyName>
+    <RootNamespace>SFMLTest</RootNamespace>
+    <AssemblyName>SFMLTest</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -53,8 +53,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Calculations\Collision.cs" />
     <Compile Include="Entities\DragableCircle.cs" />
     <Compile Include="Entities\DragableLine.cs" />
+    <Compile Include="Entities\Interfaces\ICollidable.cs" />
+    <Compile Include="Entities\Interfaces\IDragable.cs" />
+    <Compile Include="Entities\Interfaces\ISATCollidable.cs" />
     <Compile Include="Scenes\CollisionDetectionScene.cs" />
     <Compile Include="Entities\Line.cs" />
     <Compile Include="Program.cs" />
@@ -62,8 +66,9 @@
     <Compile Include="Entities\Player.cs" />
     <Compile Include="Scenes\DragableLineScene.cs" />
     <Compile Include="Scenes\IScene.cs" />
+    <Compile Include="Scenes\LineCollisionScene.cs" />
     <Compile Include="Scenes\TestScene.cs" />
-    <Compile Include="Utils.cs" />
+    <Compile Include="Calculations\VectorExtension.cs" />
     <Compile Include="Window.cs" />
   </ItemGroup>
   <ItemGroup>

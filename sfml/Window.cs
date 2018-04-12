@@ -19,6 +19,7 @@ namespace SFMLTest
             //_scene = new TestScene();
             _scene = new CollisionDetectionScene(_window);
             //_scene = new DragableLineScene(_window);
+            //_scene = new LineCollisionScene(_window);
             _window.MouseButtonPressed += _scene.MouseButtonPressed;
             _window.MouseButtonReleased += _scene.MouseButtonReleased;
 

@@ -1,11 +1,12 @@
-﻿using SFMLTest;
-using SFML.Graphics;
+﻿using SFML.Graphics;
 using SFML.Window;
 using System.Collections.Generic;
+using SFMLTest.Calculations;
+using SFMLTest.Entities.Interfaces;
 
 namespace SFMLTest.Entities
 {
-    class Player : Shape
+    public class Player : Shape, ISATCollidable
     {
         public Vector2f Size;
 
@@ -18,10 +19,7 @@ namespace SFMLTest.Entities
             Update();
         }
 
-        public override uint GetPointCount()
-        {
-            return 4;
-        }
+        public override uint GetPointCount() => 4;
 
         public override Vector2f GetPoint(uint index)
         {
@@ -35,24 +33,21 @@ namespace SFMLTest.Entities
             }
         }
 
-        public List<Vector2f> GetGlobalPoints()
-        {
-            return new List<Vector2f>()
+        public List<Vector2f> GetGlobalPoints() =>
+            new List<Vector2f>()
             {
                 Transform.TransformPoint(GetPoint(1)),
                 Transform.TransformPoint(GetPoint(2)),
                 Transform.TransformPoint(GetPoint(3)),
                 Transform.TransformPoint(GetPoint(4))
             };
-        }
 
         public Vector2f[] GetAxis()
         {
             var points = GetGlobalPoints();
-            return new []
-            {
-                points[1] - points[0],
-                points[2] - points[1]
+            return new [] {
+                (points[1] - points[0]).Normalize(),
+                (points[2] - points[1]).Normalize()
             };
         }
     }
